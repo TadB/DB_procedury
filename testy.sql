@@ -16,3 +16,11 @@ END;
 BEGIN
 insertEmployee('Marcin', 'Testowy', 'MTESTOWY', '17-SEP-18', 'NIIIIC', 6000, 100, 50);
 END;
+--formula ze zbyt dużą pensją
+BEGIN
+insertEmployee('Marcin', 'Testowy', 'MTESTOWY', '17-SEP-18', 'AD_VP', 1000000, 100, 50);
+END;
+--formula ze zbyt małą pensją
+BEGIN
+insertEmployee('Marcin', 'Testowy', 'MTESTOWY', '17-SEP-18', 'AD_VP', 7, 100, 50);
+END;

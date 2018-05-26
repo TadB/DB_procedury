@@ -9,10 +9,11 @@ create or replace PROCEDURE InsertEmployee (
     P_DEPARTMENT_ID IN NUMBER) IS
 
     not_nullable EXCEPTION;
-    incorrect_job_id EXCEPTION;
     incorrect_salary EXCEPTION;
     v_manager_id DEPARTMENTS.MANAGER_ID%TYPE;
     v_department_id DEPARTMENTS.DEPARTMENT_ID%TYPE;
+    v_max_salary JOBS.MAX_SALARY%TYPE;
+    v_min_salary JOBS.MIN_SALARY%TYPE;
     v_job_id JOBS.JOB_ID%TYPE;
     flag NUMBER(3);
 BEGIN
@@ -23,17 +24,13 @@ BEGIN
     flag := 3;
     SELECT  JOB_ID INTO v_job_id FROM JOBS WHERE JOB_ID=P_JOB_ID;
 
+    SELECT MAX_SALARY INTO v_max_salary FROM JOBS WHERE JOB_ID = P_JOB_ID;
+    SELECT MIN_SALARY INTO v_min_salary FROM JOBS WHERE JOB_ID = P_JOB_ID;
+
     IF (P_HIRE_DATE IS NULL OR P_JOB_ID IS NULL OR P_EMAIL IS NULL OR P_LAST_NAME IS NULL) THEN
         RAISE not_nullable;
---    ELSIF v_manager_id IS NULL THEN
---        RAISE incorrect_manager_id;
---    ELSIF (SELECT DEPARTMENT_ID FROM DEPARTMENTS WHERE DEPARTMENT_ID=P_DEPARTMENT_ID) IS NOT NULL THEN
---        RAISE incorrect_department_id_exception;
---    ELSIF (SELECT JOB_ID FROM JOBS WHERE JOB_ID=P_JOB_ID) IS NOT NULL THEN
---        RAISE incorrect_job_id_exception;
---    ELSIF ((SELECT MAX_SALARY FROM JOBS WHERE JOB_ID = P_JOB_ID)<P_SALARY OR (SELECT MIN_SALARY FROM JOBS WHERE JOB_ID = P_JOB_ID)>P_SALARY) THEN
---        RAISE incorrect_salary_exception;
-    -- ELSIF ()
+    ELSIF (v_max_salary<P_SALARY OR v_min_salary>P_SALARY) THEN
+       RAISE incorrect_salary;
     END IF;
     INSERT INTO EMPLOYEES(EMPLOYEE_ID, FIRST_NAME, LAST_NAME, EMAIL, HIRE_DATE, JOB_ID, SALARY, DEPARTMENT_ID, MANAGER_ID)
     VALUES (SEQ_EMP_ID.NEXTVAL, P_FIRST_NAME, P_LAST_NAME, P_EMAIL, P_HIRE_DATE, P_JOB_ID, P_SALARY, P_DEPARTMENT_ID, P_MANAGER_ID);
@@ -48,10 +45,10 @@ EXCEPTION
         ELSIF flag = 3 THEN
             dbms_output.put_line('niewłaściwy lub nieistniejący kod stanowiska');
         END IF;
+    WHEN incorrect_salary THEN
+        dbms_output.put_line('pensja spoza zakresu przysługującego wynagrodzenia dla zajmowanego stanowiska');
 --    WHEN incorrect_department_id THEN
 --        dbms_output.put_line('niewłaściwy lub nieistniejący kod departamentu');
 --    WHEN incorrect_job_id THEN
 --        dbms_output.put_line('niewłaściwy lub nieistniejący kod stanowiska');
---    WHEN incorrect_salary THEN
---        dbms_output.put_line('pensja spoza zakresu przysługującego wynagrodzenia dla zajmowanego stanowiska');
 END InsertEmployee;

@@ -12,3 +12,7 @@ END;
 BEGIN
 insertEmployee('Marcin', 'Testowy', 'MTESTOWY', '17-SEP-18', 'AD_VP', 6000, 1, 50);
 END;
+--formula ze zlym kodem stanowiska
+BEGIN
+insertEmployee('Marcin', 'Testowy', 'MTESTOWY', '17-SEP-18', 'NIIIIC', 6000, 100, 50);
+END;

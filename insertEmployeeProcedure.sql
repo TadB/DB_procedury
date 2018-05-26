@@ -13,12 +13,15 @@ create or replace PROCEDURE InsertEmployee (
     incorrect_salary EXCEPTION;
     v_manager_id DEPARTMENTS.MANAGER_ID%TYPE;
     v_department_id DEPARTMENTS.DEPARTMENT_ID%TYPE;
+    v_job_id JOBS.JOB_ID%TYPE;
     flag NUMBER(3);
 BEGIN
     flag := 1;
     SELECT DISTINCT MANAGER_ID INTO v_manager_id FROM EMPLOYEES WHERE MANAGER_ID=P_MANAGER_ID;
     flag := 2;
-    SELECT DISTINCT DEPARTMENT_ID INTO v_department_id FROM EMPLOYEES WHERE DEPARTMENT_ID=P_DEPARTMENT_ID;
+    SELECT  DEPARTMENT_ID INTO v_department_id FROM DEPARTMENTS WHERE DEPARTMENT_ID=P_DEPARTMENT_ID;
+    flag := 3;
+    SELECT  JOB_ID INTO v_job_id FROM JOBS WHERE JOB_ID=P_JOB_ID;
 
     IF (P_HIRE_DATE IS NULL OR P_JOB_ID IS NULL OR P_EMAIL IS NULL OR P_LAST_NAME IS NULL) THEN
         RAISE not_nullable;
@@ -42,6 +45,8 @@ EXCEPTION
             DBMS_OUTPUT.PUT_LINE('niewłaściwy lub nieistniejący kod przełożonego');
         ELSIF flag = 2 THEN
             dbms_output.put_line('niewłaściwy lub nieistniejący kod departamentu');
+        ELSIF flag = 3 THEN
+            dbms_output.put_line('niewłaściwy lub nieistniejący kod stanowiska');
         END IF;
 --    WHEN incorrect_department_id THEN
 --        dbms_output.put_line('niewłaściwy lub nieistniejący kod departamentu');

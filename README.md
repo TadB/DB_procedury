@@ -11,3 +11,7 @@ Dodaj do procedury obsługę błędów, jeżeli wprowadzono:
 
 Napisz program testujący użycie procedury.
 W programie sprawdź działanie wszystkich walidacji.
+
+
+Zbuduj wyzwalacz, który zablokuje próbę przypisania ujemnego wynagrodzenia
+dla operacji wstawienia i aktualizacji wiersza w tabeli EMPLOYEES.
